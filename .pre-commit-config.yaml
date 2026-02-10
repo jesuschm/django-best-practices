@@ -1,5 +1,5 @@
 repos:
-  # Hooks básicos de pre-commit
+  # Basic pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -12,7 +12,7 @@ repos:
       - id: check-merge-conflict
       - id: debug-statements
 
-  # Ruff - Linter y formatter super rápido (reemplaza a Black, isort, flake8)
+  # Ruff - Fast linter and formatter (replaces Black, isort, flake8)
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.1
     hooks:
@@ -22,7 +22,7 @@ repos:
       # Formatter
       - id: ruff-format
 
-  # Verificaciones específicas de Django
+  # Django-specific checks
   - repo: https://github.com/adamchainz/django-upgrade
     rev: 1.22.2
     hooks:

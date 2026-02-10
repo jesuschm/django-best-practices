@@ -1,4 +1,4 @@
-# Configuración de Ruff para Django
+# Ruff configuration for Django
 target-version = "py313"
 line-length = 88
 
@@ -14,7 +14,4 @@ select = [
 ignore = []
 
 [lint.per-file-ignores]
-"*/migrations/*.py" = ["E501"]  # Ignorar líneas largas en migraciones
-
-[lint.isort]
-known-first-party = ["config"]
+"*/migrations/*.py" = ["E501"]  # Ignore long lines in migrations

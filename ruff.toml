@@ -1,0 +1,17 @@
+# Ruff configuration for Django
+target-version = "py313"
+line-length = 88
+
+[lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "DJ", # django
+    "UP", # pyupgrade
+]
+ignore = []
+
+[lint.per-file-ignores]
+"*/migrations/*.py" = ["E501"]  # Ignore long lines in migrations

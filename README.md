@@ -4,72 +4,109 @@ A Django example project showcasing **best practices**, modern architecture, and
 
 ## Requirements
 
-- **Python**: 3.14 (managed with `uv`; the `.python-version` file is included in the repo for reference).
-- **uv**: dependency manager and Python version manager for this project.
+- Python 3.14+
+- [uv](https://github.com/astral-sh/uv) package manager
+- PostgreSQL 16+
+- Docker and Docker Compose (optional, only for running PostgreSQL locally)
 
-## Getting Started
+## Installation
 
-### 1. Install uv
-
-If you don't have `uv` installed yet, install it using one of the following methods:
-
-**macOS and Linux:**
+### 1. Setup environment variables
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+cp .env.example .env
 ```
 
-**Windows:**
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
+Edit the `.env` file with the appropriate values for your environment (see `.env.example` for reference).
 
-### 2. Install Python 3.14
-
-Install the required Python version using `uv`:
-
-```bash
-uv python install 3.14
-```
-
-### 3. Create virtual environment and install dependencies
-
-Create a virtual environment and sync the project dependencies:
-
+### 2. Install dependencies
 ```bash
 uv sync
 source .venv/bin/activate
 ```
 
-Note: `uv sync` will automatically create a virtual environment if one doesn't exist.
-
-### 4. Install pre-commit hooks
-
-Install pre-commit and set up the git hooks:
-
+### 3. Setup pre-commit hooks
 ```bash
 uv run pre-commit install
 ```
 
-This will install hooks for code formatting (Ruff), linting, and other checks that run automatically on commit.
+### 4. Database setup
 
-### 5. Run database migrations
+This project uses PostgreSQL. You can either connect to an existing PostgreSQL instance or use the provided Docker Compose file.
 
-Set up the database schema:
+#### Option A: Local PostgreSQL (no Docker required)
 
-```bash
-uv run python manage.py migrate
+If you already have PostgreSQL installed locally, simply update the `.env` file with your database credentials:
+
+```
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=your_database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
 ```
 
-### 6. Start the development server
+Then run migrations and create a superuser:
+```bash
+uv run python manage.py migrate
+uv run python manage.py createsuperuser
+```
 
-Run the Django development server:
+#### Option B: PostgreSQL via Docker Compose (optional)
 
+A minimal `docker-compose.yml` is provided for convenience. It expects an external Docker volume named `db_volume` so the database files persist across container restarts.
+
+1. Create the external volume:
+```bash
+docker volume create db_volume
+```
+
+2. Start the database service:
+```bash
+docker compose up -d
+```
+
+3. Run migrations and create a superuser:
+```bash
+uv run python manage.py migrate
+uv run python manage.py createsuperuser
+```
+
+## Development
+
+### Run the development server
 ```bash
 uv run python manage.py runserver
 ```
 
-The server will be available at `http://127.0.0.1:8000/`.
+### Run linting
+```bash
+uv run ruff check .
+```
 
-## Current status
+### Run formatting
+```bash
+uv run ruff format .
+```
 
-This project is in its initial phase; structure and best practices examples will be added incrementally.
+### Run all pre-commit hooks
+```bash
+uv run pre-commit run --all-files
+```
+
+### Run tests
+```bash
+uv run pytest
+```
+
+## Project Structure
+
+- `config/`: Django project configuration (settings, URLs, WSGI/ASGI)
+- `common/`: Shared utilities and base classes
+  - `models.py`: BaseModel abstract class with UUID primary key and timestamps
+  - `services/file.py`: File reading utilities
+  - `errors.py`: Common error messages
+  - `constants.py`: Shared constants
+
+## TODOs
+
+- [ ] Add GitHub Actions workflows (CI with linting, testing, and Docker image build)
